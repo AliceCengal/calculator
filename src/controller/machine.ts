@@ -119,7 +119,7 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
       const top = prev.stack.pop() as number;
       return s.concat({
         stack: prev.stack.slice(),
-        front: (top - Number(prev.front)).toString(),
+        front: (top / Number(prev.front)).toString(),
         mode: "steady",
       });
     }
