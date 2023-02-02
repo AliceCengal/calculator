@@ -1,4 +1,4 @@
 import { render } from "preact";
 import { App } from "./app";
 
-render(<App />, document.body as HTMLElement);
+render(<App />, document.getElementById("app") as HTMLElement);
