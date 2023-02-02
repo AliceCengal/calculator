@@ -1,0 +1,27 @@
+.main {
+  display: grid;
+  gap: 8px;
+  font-family: monospace;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.key {
+  background-color: lightsteelblue;
+  text-align: center;
+  padding-block: 8px;
+  border: none;
+  border-radius: 8px;
+}
+
+.key2 {
+  font-size: xx-large;
+  background-color: lightsteelblue;
+  text-align: center;
+  padding-block: 2px;
+  border: none;
+  border-radius: 8px;
+}
+
+.main > *:last-child {
+  grid-column: 4 / span 2;
+}
