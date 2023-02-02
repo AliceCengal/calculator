@@ -9,8 +9,8 @@ export function Keypad() {
       <Key label="asin" op="asin" />
       <Key label="acos" op="acos" />
       <Key label="atan" op="atan" />
-      <Key2 label={"\u221A"} op="0" />
-      <Key2 label={"\u221B"} op="0" />
+      <Key2 label={"\u221A"} op="sqrt" />
+      <Key2 label={"\u221B"} op="cbrt" />
 
       <Key label="sin" op="sin" />
       <Key label="cos" op="cos" />
@@ -18,21 +18,21 @@ export function Keypad() {
       <Key label="e" op="e" />
       <Key2 label={"\u213c"} op="pi" />
 
-      <Key label="9" op="9" />
-      <Key label="8" op="8" />
       <Key label="7" op="7" />
+      <Key label="8" op="8" />
+      <Key label="9" op="9" />
       <Key label="C" op="back" />
       <Key label="CL" op="clear" />
 
-      <Key label="6" op="6" />
-      <Key label="5" op="5" />
       <Key label="4" op="4" />
+      <Key label="5" op="5" />
+      <Key label="6" op="6" />
       <Key2 label={"\u00d7"} op="multiply" />
       <Key2 label={"\u00f7"} op="divide" />
 
-      <Key label="3" op="3" />
-      <Key label="2" op="2" />
       <Key label="1" op="1" />
+      <Key label="2" op="2" />
+      <Key label="3" op="3" />
       <Key2 label={"\u002b"} op="plus" />
       <Key2 label={"\u002d"} op="minus" />
 
