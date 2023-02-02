@@ -47,7 +47,13 @@ export function Keypad() {
 function Key({ label, op }: { label: string; op: MachineAction }) {
   const dispatch = useCalcDispatch();
   return (
-    <button onClick={(e) => dispatch(op)} class={style.key}>
+    <button
+      onClick={(e) => {
+        navigator.vibrate(10);
+        dispatch(op);
+      }}
+      class={style.key}
+    >
       {label}
     </button>
   );
@@ -56,7 +62,13 @@ function Key({ label, op }: { label: string; op: MachineAction }) {
 function Key2({ label, op }: { label: string; op: MachineAction }) {
   const dispatch = useCalcDispatch();
   return (
-    <button onClick={(e) => dispatch(op)} class={style.key2}>
+    <button
+      onClick={(e) => {
+        navigator.vibrate(10);
+        dispatch(op);
+      }}
+      class={style.key2}
+    >
       {label}
     </button>
   );
