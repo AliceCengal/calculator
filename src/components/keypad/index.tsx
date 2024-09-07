@@ -49,7 +49,7 @@ function Key({ label, op }: { label: string; op: MachineAction }) {
   return (
     <button
       onClick={(e) => {
-        navigator.vibrate(10);
+        buzz();
         dispatch(op);
       }}
       class={style.key}
@@ -64,7 +64,7 @@ function Key2({ label, op }: { label: string; op: MachineAction }) {
   return (
     <button
       onClick={(e) => {
-        navigator.vibrate(10);
+        buzz();
         dispatch(op);
       }}
       class={style.key2}
@@ -73,3 +73,8 @@ function Key2({ label, op }: { label: string; op: MachineAction }) {
     </button>
   );
 }
+
+const buzz =
+  typeof navigator !== "undefined" && typeof navigator.vibrate !== "undefined"
+    ? () => navigator.vibrate(10)
+    : () => {};
