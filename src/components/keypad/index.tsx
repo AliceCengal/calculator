@@ -1,9 +1,12 @@
+import { useEffect } from "preact/hooks";
 import { MachineAction, useCalcDispatch } from "../../controller";
 import style from "./index.module.css";
 
 // TODO: deg/rad,, hyperbolic trig, exp, inverse 1/x
 
 export function Keypad() {
+  useKeyboardControl();
+
   return (
     <div class={style.main}>
       <Key label="asin" op="asin" />
@@ -78,3 +81,41 @@ const buzz =
   typeof navigator !== "undefined" && typeof navigator.vibrate !== "undefined"
     ? () => navigator.vibrate(10)
     : () => {};
+
+function useKeyboardControl() {
+  const dispatch = useCalcDispatch();
+
+  useEffect(() => {
+    const f = (e: KeyboardEvent) => {
+      // console.log("useKeyboardControl", e.key);
+      const command = KEY_MAP[e.key];
+      if (command != null) {
+        dispatch(command);
+      }
+    };
+    window.addEventListener("keyup", f);
+    return () => {
+      window.removeEventListener("keyup", f);
+    };
+  }, []);
+}
+
+const KEY_MAP: Record<string, MachineAction> = {
+  "1": "1",
+  "2": "2",
+  "3": "3",
+  "4": "4",
+  "5": "5",
+  "6": "6",
+  "7": "7",
+  "8": "8",
+  "9": "9",
+  "0": "0",
+  "+": "plus",
+  "-": "minus",
+  "*": "multiply",
+  "/": "divide",
+  Enter: "push",
+  Backspace: "back",
+  ".": "decimal",
+};
