@@ -2,13 +2,13 @@ import { useReducer } from "preact/hooks";
 
 type Mode = "steady" | "input" | "decimal";
 
-const initialState = {
+const INITIAL_STATE = {
   stack: [] as number[],
   front: "0",
   mode: "input" as Mode,
 };
 
-export type MachineState = typeof initialState;
+export type MachineState = typeof INITIAL_STATE;
 
 export type MachineAction =
   | "push"
@@ -27,8 +27,13 @@ export type MachineAction =
   | "asin"
   | "acos"
   | "atan"
+  | "square"
+  | "cube"
   | "sqrt"
   | "cbrt"
+  | "exp"
+  | "log"
+  | "expn"
   | "e"
   | "pi"
   | "0"
@@ -40,7 +45,8 @@ export type MachineAction =
   | "4"
   | "3"
   | "2"
-  | "1";
+  | "1"
+  | "NOOP";
 
 function reducer(s: MachineState[], a: MachineAction): MachineState[] {
   const prev = s[s.length - 1];
@@ -91,6 +97,20 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         mode: "steady",
       });
     }
+    case "square": {
+      return s.concat({
+        stack: prev.stack.slice(),
+        front: Math.pow(Number(prev.front), 2).toString(),
+        mode: "steady",
+      })
+    }
+    case "cube": {
+      return s.concat({
+        stack: prev.stack.slice(),
+        front: Math.pow(Number(prev.front), 3).toString(),
+        mode: "steady",
+      })
+    }
     case "sqrt": {
       return s.concat({
         stack: prev.stack.slice(),
@@ -105,9 +125,32 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         mode: "steady",
       });
     }
+    case "exp": {
+      return s.concat({
+        stack: prev.stack.slice(),
+        front: Math.exp(Number(prev.front)).toString(),
+        mode: "steady",
+      });
+    }
+    case "log": {
+      return s.concat({
+        stack: prev.stack.slice(),
+        front: Math.log(Number(prev.front)).toString(),
+        mode: "steady",
+      });
+    }
+    case "expn": {
+      const top = prev.stack.pop()
+      if (top == null) return s;
+      return s.concat({
+        stack: prev.stack.slice(),
+        front: Math.pow(Number(prev.front), top).toString(),
+        mode: "steady",
+      });
+    }
     case "multiply": {
-      if (!prev.stack.length) return s;
-      const top = prev.stack.pop() as number;
+      const top = prev.stack.pop();
+      if (top == null) return s;
       return s.concat({
         stack: prev.stack.slice(),
         front: (Number(prev.front) * top).toString(),
@@ -155,7 +198,7 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
       return s;
     }
     case "clear": {
-      return [initialState];
+      return [INITIAL_STATE];
     }
     case "decimal": {
       if (prev.mode === "steady") {
@@ -199,6 +242,9 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         mode: "steady",
       });
     }
+    case "NOOP": {
+      return s;
+    }
     default: {
       if (prev.mode === "steady") {
         return s.concat({
@@ -216,5 +262,5 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
 }
 
 export function useMachine() {
-  return useReducer(reducer, [initialState]);
+  return useReducer(reducer, [INITIAL_STATE]);
 }

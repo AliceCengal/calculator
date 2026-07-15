@@ -9,6 +9,12 @@ export function Keypad() {
 
   return (
     <div class={style.main}>
+      <Key label="exp" op="exp" />
+      <Key label="log" op="log" />
+      <Key label="expn" op="expn" />
+      <Key label="sqr" op="square" />
+      <Key label="cub" op="cube" />
+
       <Key label="asin" op="asin" />
       <Key label="acos" op="acos" />
       <Key label="atan" op="atan" />
