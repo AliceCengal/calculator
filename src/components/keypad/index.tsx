@@ -1,8 +1,8 @@
 import { useEffect } from "preact/hooks";
-import { MachineAction, useCalcDispatch } from "../../controller";
+import { MachineAction, MachineState, useCalcDispatch, useCalcState } from "../../controller";
 import style from "./index.module.css";
 
-// TODO: deg/rad,, hyperbolic trig, exp, inverse 1/x
+// TODO: deg/rad
 
 export function Keypad() {
   useKeyboardControl();
@@ -11,13 +11,13 @@ export function Keypad() {
     <div class={style.main}>
       <Key label="exp" op="exp" />
       <Key label="log" op="log" />
-      <Key label="expn" op="expn" />
-      <Key label="sqr" op="square" />
-      <Key label="cub" op="cube" />
+      <Key label="x^y" op="expn" />
+      <Key label="x^2" op="square" />
+      <Key label="x^3" op="cube" />
 
-      <Key label="asin" op="asin" />
-      <Key label="acos" op="acos" />
-      <Key label="atan" op="atan" />
+      <ToggleKey label="arc" op="arc" check_key="mode_arc" />
+      <ToggleKey label="hyp" op="hyp" check_key="mode_hyp" />
+      <Key label="1/x" op="inv" />
       <Key2 label={"\u221A"} op="sqrt" />
       <Key2 label={"\u221B"} op="cbrt" />
 
@@ -83,10 +83,27 @@ function Key2({ label, op }: { label: string; op: MachineAction }) {
   );
 }
 
+function ToggleKey({ label, op, check_key }: { label: string; op: MachineAction, check_key: keyof MachineState }) {
+  const dispatch = useCalcDispatch();
+  const state = useCalcState()
+
+  return (
+    <button
+      onClick={(e) => {
+        buzz();
+        dispatch(op);
+      }}
+      class={`${style.key} ${state[check_key] ? style.key_active : ""}`}
+    >
+      {label}
+    </button>
+  );
+}
+
 const buzz =
   typeof navigator !== "undefined" && typeof navigator.vibrate !== "undefined"
     ? () => navigator.vibrate(10)
-    : () => {};
+    : () => { };
 
 function useKeyboardControl() {
   const dispatch = useCalcDispatch();

@@ -1,6 +1,12 @@
 .main {
+  position: relative;
   padding: 4px 8px;
   text-align: right;
   font-family: monospace;
   background-color: gainsboro;
+}
+
+.label {
+  position: absolute;
+  left: 8px;
 }

@@ -8,8 +8,8 @@ export function Display() {
     <div class={style.main}>
       <div>{state.stack[state.stack.length - 3] ?? "0"}</div>
       <div>{state.stack[state.stack.length - 2] ?? "0"}</div>
-      <div>{state.stack[state.stack.length - 1] ?? "0"}</div>
-      <div>{state.front}</div>
+      <div><span class={style.label}>y:</span><span>{state.stack[state.stack.length - 1] ?? "0"}</span></div>
+      <div><span class={style.label}>x:</span><span>{state.front}</span></div>
     </div>
   );
 }

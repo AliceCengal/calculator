@@ -6,6 +6,8 @@ const INITIAL_STATE = {
   stack: [] as number[],
   front: "0",
   mode: "input" as Mode,
+  mode_arc: false,
+  mode_hyp: false,
 };
 
 export type MachineState = typeof INITIAL_STATE;
@@ -21,12 +23,12 @@ export type MachineAction =
   | "minus"
   | "multiply"
   | "divide"
+  | "inv"
   | "sin"
   | "cos"
   | "tan"
-  | "asin"
-  | "acos"
-  | "atan"
+  | "arc"
+  | "hyp"
   | "square"
   | "cube"
   | "sqrt"
@@ -48,60 +50,48 @@ export type MachineAction =
   | "1"
   | "NOOP";
 
+function processTrig(num: number, op: string, arc: boolean, hyp: boolean) {
+  if ((op == "cos" || op == "sin") && arc) {
+    if (num >= 1 || num <= -1) return num.toString();
+  }
+  let op2 = `${arc ? "a" : ""}${op}${hyp ? "h" : ""}`
+  return (Math as any)[op2](num).toString() as string
+}
+
 function reducer(s: MachineState[], a: MachineAction): MachineState[] {
   const prev = s[s.length - 1];
   switch (a) {
-    case "acos": {
-      const num = Number(prev.front);
-      if (num >= 1 || num <= -1) return s;
-      return s.concat({
-        stack: prev.stack.slice(),
-        front: Math.acos(Number(prev.front)).toString(),
-        mode: "steady",
-      });
-    }
-    case "atan": {
-      return s.concat({
-        stack: prev.stack.slice(),
-        front: Math.atan(Number(prev.front)).toString(),
-        mode: "steady",
-      });
-    }
-    case "asin": {
-      const num = Number(prev.front);
-      if (num >= 1 || num <= -1) return s;
-      return s.concat({
-        stack: prev.stack.slice(),
-        front: Math.asin(Number(prev.front)).toString(),
-        mode: "steady",
-      });
-    }
-    case "cos": {
-      return s.concat({
-        stack: prev.stack.slice(),
-        front: Math.cos(Number(prev.front)).toString(),
-        mode: "steady",
-      });
-    }
-    case "tan": {
-      return s.concat({
-        stack: prev.stack.slice(),
-        front: Math.tan(Number(prev.front)).toString(),
-        mode: "steady",
-      });
-    }
+    case "cos":
+    case "tan":
     case "sin": {
+      const result = processTrig(Number(prev.front), a, prev.mode_arc, prev.mode_hyp)
       return s.concat({
         stack: prev.stack.slice(),
-        front: Math.sin(Number(prev.front)).toString(),
+        front: result,
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
+    }
+    case "arc": {
+      return s.concat({
+        ...prev,
+        mode_arc: !prev.mode_arc
+      })
+    }
+    case "hyp": {
+      return s.concat({
+        ...prev,
+        mode_hyp: !prev.mode_hyp
+      })
     }
     case "square": {
       return s.concat({
         stack: prev.stack.slice(),
         front: Math.pow(Number(prev.front), 2).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       })
     }
     case "cube": {
@@ -109,6 +99,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: Math.pow(Number(prev.front), 3).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       })
     }
     case "sqrt": {
@@ -116,6 +108,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: Math.sqrt(Math.abs(Number(prev.front))).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "cbrt": {
@@ -123,6 +117,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: Math.cbrt(Number(prev.front)).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "exp": {
@@ -130,6 +126,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: Math.exp(Number(prev.front)).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "log": {
@@ -137,6 +135,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: Math.log(Number(prev.front)).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "expn": {
@@ -146,6 +146,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: Math.pow(Number(prev.front), top).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "multiply": {
@@ -155,6 +157,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: (Number(prev.front) * top).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "divide": {
@@ -164,6 +168,17 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: (top / Number(prev.front)).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
+      });
+    }
+    case "inv": {
+      return s.concat({
+        stack: prev.stack.slice(),
+        front: (1 / Number(prev.front)).toString(),
+        mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "plus": {
@@ -173,6 +188,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: (Number(prev.front) + top).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "minus": {
@@ -182,6 +199,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.slice(),
         front: (top - Number(prev.front)).toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "push": {
@@ -189,6 +208,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.concat(Number.parseFloat(prev.front)),
         front: "0",
         mode: "input",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "back": {
@@ -206,6 +227,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
           stack: prev.stack.concat(Number.parseFloat(prev.front)),
           front: "0.",
           mode: "input",
+          mode_arc: prev.mode_arc,
+          mode_hyp: prev.mode_hyp,
         });
       }
       if (!prev.front.includes(".")) {
@@ -233,6 +256,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.concat(Number.parseFloat(prev.front)),
         front: Math.E.toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "pi": {
@@ -240,6 +265,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         stack: prev.stack.concat(Number.parseFloat(prev.front)),
         front: Math.PI.toString(),
         mode: "steady",
+        mode_arc: prev.mode_arc,
+        mode_hyp: prev.mode_hyp,
       });
     }
     case "NOOP": {
@@ -251,6 +278,8 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
           stack: prev.stack.concat(Number.parseFloat(prev.front)),
           front: a,
           mode: "input",
+          mode_arc: prev.mode_arc,
+          mode_hyp: prev.mode_hyp,
         });
       }
       return s.concat({
