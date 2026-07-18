@@ -36,7 +36,7 @@ export type MachineAction =
   | "exp"
   | "log"
   | "expn"
-  | "e"
+  | "tau"
   | "pi"
   | "0"
   | "9"
@@ -52,7 +52,7 @@ export type MachineAction =
 
 function processTrig(num: number, op: string, arc: boolean, hyp: boolean) {
   if ((op == "cos" || op == "sin") && arc) {
-    if (num >= 1 || num <= -1) return num.toString();
+    if (num > 1 || num < -1) return num.toString();
   }
   let op2 = `${arc ? "a" : ""}${op}${hyp ? "h" : ""}`
   return (Math as any)[op2](num).toString() as string
@@ -251,10 +251,10 @@ function reducer(s: MachineState[], a: MachineAction): MachineState[] {
         front: "-" + prev.front,
       });
     }
-    case "e": {
+    case "tau": {
       return s.concat({
         stack: prev.stack.concat(Number.parseFloat(prev.front)),
-        front: Math.E.toString(),
+        front: (Math.PI * 2).toString(),
         mode: "steady",
         mode_arc: prev.mode_arc,
         mode_hyp: prev.mode_hyp,

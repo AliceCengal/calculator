@@ -2,36 +2,36 @@ import { useEffect } from "preact/hooks";
 import { MachineAction, MachineState, useCalcDispatch, useCalcState } from "../../controller";
 import style from "./index.module.css";
 
-// TODO: deg/rad
+// TODO: deg/rad , swap, pop
 
 export function Keypad() {
   useKeyboardControl();
 
   return (
     <div class={style.main}>
-      <Key label="exp" op="exp" />
       <Key label="log" op="log" />
+      <Key label="exp" op="exp" />
       <Key label="x^y" op="expn" />
       <Key label="x^2" op="square" />
       <Key label="x^3" op="cube" />
 
       <ToggleKey label="arc" op="arc" check_key="mode_arc" />
       <ToggleKey label="hyp" op="hyp" check_key="mode_hyp" />
+      <Key label="deg" op="cbrt" />
       <Key label="1/x" op="inv" />
       <Key2 label={"\u221A"} op="sqrt" />
-      <Key2 label={"\u221B"} op="cbrt" />
 
       <Key label="sin" op="sin" />
       <Key label="cos" op="cos" />
       <Key label="tan" op="tan" />
-      <Key label="e" op="e" />
       <Key2 label={"\u213c"} op="pi" />
+      <Key label="SWP" op="tau" />
 
       <Key label="7" op="7" />
       <Key label="8" op="8" />
       <Key label="9" op="9" />
       <Key label="C" op="back" />
-      <Key label="CL" op="clear" />
+      <Key label="POP" op="clear" />
 
       <Key label="4" op="4" />
       <Key label="5" op="5" />
@@ -47,7 +47,7 @@ export function Keypad() {
 
       <Key label="0" op="0" />
       <Key2 label={"\u00b1"} op="negate" />
-      <Key label="." op="decimal" />
+      <Key2 label="." op="decimal" />
       <Key label="PUSH" op="push" />
     </div>
   );
