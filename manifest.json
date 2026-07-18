@@ -1,5 +1,6 @@
 {
-  "name": "My PWA",
+  "name": "RPN Scientific Calculator",
+  "short_name": "Calc",
   "icons": [
     {
       "src": "calculator.png",
