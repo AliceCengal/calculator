@@ -17,21 +17,21 @@ export function Keypad() {
 
       <ToggleKey label="arc" op="arc" check_key="mode_arc" />
       <ToggleKey label="hyp" op="hyp" check_key="mode_hyp" />
-      <Key label="deg" op="cbrt" />
+      <ToggleKey label="deg" op="deg" check_key="mode_deg" />
       <Key label="1/x" op="inv" />
       <Key2 label={"\u221A"} op="sqrt" />
 
       <Key label="sin" op="sin" />
       <Key label="cos" op="cos" />
       <Key label="tan" op="tan" />
+      <Key2 label={"\u{1d70f}"} op="tau" />
       <Key2 label={"\u213c"} op="pi" />
-      <Key label="SWP" op="tau" />
 
       <Key label="7" op="7" />
       <Key label="8" op="8" />
       <Key label="9" op="9" />
-      <Key label="C" op="back" />
-      <Key label="POP" op="clear" />
+      <Key label="POP" op="pop" />
+      <Key label="SWP" op="swap" />
 
       <Key label="4" op="4" />
       <Key label="5" op="5" />
