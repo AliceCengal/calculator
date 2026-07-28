@@ -25,7 +25,7 @@ export function Keypad() {
       <Key label="cos" op="cos" />
       <Key label="tan" op="tan" />
       <Key2 label={"\u{1d70f}"} op="tau" />
-      <Key2 label={"\u213c"} op="pi" />
+      <Key2 label={"\u{1d70b}"} op="pi" />
 
       <Key label="7" op="7" />
       <Key label="8" op="8" />
