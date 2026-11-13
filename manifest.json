@@ -1,6 +1,7 @@
 {
   "name": "RPN Scientific Calculator",
   "short_name": "Calc",
+  "display": "standalone",
   "icons": [
     {
       "src": "calculator.png",
